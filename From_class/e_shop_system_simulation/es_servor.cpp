@@ -620,6 +620,9 @@ bool Servor::cart_payment(vector<int> index, double total_price){ // 支付
         cout << "ERROR: cart is empty" << endl;
         return false;
     }
+    if(total_price == -1){ // 判断结算是否通过
+        return false;
+    }
     int code_index = -1;
     int use_coupon = -1;
     cout << "Use coupon? (Y/N): ";
