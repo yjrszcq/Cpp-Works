@@ -8,7 +8,7 @@ public:
 };
 
 Root::Root() : User(User::ROOT) { // 构造函数
-    ifstream file("root_config.txt");
+    ifstream file("config/root.txt");
     if(!file.is_open()){ // 如果文件不存在, 则使用默认的用户名和密码
         name = "root";
         password = "root123456";

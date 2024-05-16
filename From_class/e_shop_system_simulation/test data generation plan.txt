@@ -1,7 +1,7 @@
 我写了一个模拟购物系统，包含3个数据文件。
 
 1
-products_data.txt
+products_data.csv
 
 测试数据包含：
 product_name(商品名称，字符串中间不能有空格，不同单词可用字符'_'连接)
@@ -10,10 +10,10 @@ product_price(商品价格，是一个不小于0的double类型小数，保留�
 product_num(商品剩余的数量)
 
 请按以下格式生成20行测试数据：
-product_name product_type product_price product_num
+product_name,product_type,product_price,product_num
 
 2
-user_data.txt
+user_data.csv
 
 测试数据包含：
 name(用户名，包含大小写字母及数字，长度4在10位之间)
@@ -25,10 +25,10 @@ product_name(购物车中的某个物品的名字，可有多个物品)
 product_num(购物车中的某个物品的数量，可有多个物品)
 
 请按以下格式生成20行测试数据, 用户购物车中的商品只来自之前生成的商品：
-name password money coupon code_flag product_name1 product_num1 product_name2 product_num2 ... ...
+name,password,money,coupon,code_flag,product_name1,product_num1,product_name2,product_num2,...,...
 
 3
-codes_data.txt
+codes_data.csv
 
 测试数据包含：
 code(兑换码，长度为25位，包含大小写字母及数字)
@@ -36,4 +36,4 @@ discount(折扣度，用一个0.7到0.9的小数表示)
 publish_flag(是否已经发给用户，1为是，0为否)
 
 请按以下格式生成20行测试数据：
-code discount publish_flag
+code,discount,publish_flag

@@ -110,16 +110,23 @@ Servor::Servor(){ // 构造函数
 
 bool Servor::servor_file_check(){ // 检查文件
     bool jud = true;
-    if(access("data_products.txt", F_OK) != 0){ // 判断商品数据文件是否存在
-        cout << "ERROR: 'data_products.txt' not found" << endl;
+    if (access("data", 0) != 0){ // 判断数据文件夹是否存在
+        cout << "ERROR: 'data/products.csv' not found" << endl;
+        cout << "ERROR: 'data/users.csv' not found" << endl;
+        cout << "ERROR: 'data/codes.csv' not found" << endl;
+		mkdir("data");
+        return false;
+	}
+    if(access("data/products.csv", 0) != 0){ // 判断商品数据文件是否存在
+        cout << "ERROR: 'data/products.csv' not found" << endl;
         jud = false;
     }
-    if(access("data_user.txt", F_OK) != 0){ // 判断用户数据文件是否存在
-        cout << "ERROR: 'data_user.txt' not found" << endl;
+    if(access("data/users.csv", 0) != 0){ // 判断用户数据文件是否存在
+        cout << "ERROR: 'data/users.csv' not found" << endl;
         jud = false;
     }
-    if(access("data_codes.txt", F_OK) != 0){ // 判断兑换码数据文件是否存在
-        cout << "ERROR: 'data_codes.txt' not found" << endl;
+    if(access("data/codes.csv", 0) != 0){ // 判断兑换码数据文件是否存在
+        cout << "ERROR: 'data/codes.csv' not found" << endl;
         jud = false;
     }
     return jud;
@@ -165,9 +172,9 @@ bool Servor::servor_exit(){ // 退出服务器
 }
 
 bool Servor::load_product_data(){ // 加载商品数据
-    ifstream ifs("data_products.txt");
+    ifstream ifs("data/products.csv");
     if(!ifs){
-        cout << "ERROR: 'data_products.txt' not found" << endl;
+        cout << "ERROR: 'data/products.csv' not found" << endl;
         return false;
     }
     string line;
@@ -179,7 +186,7 @@ bool Servor::load_product_data(){ // 加载商品数据
         string type;
         double price;
         int num;
-        while (getline(ss, temp,' ')){ // 逐个读取数据
+        while (getline(ss, temp,',')){ // 逐个读取数据
             if (i == 0){ // 读取商品名称
                 name = temp;
             } else if (i == 1){ // 读取商品类型
@@ -199,9 +206,9 @@ bool Servor::load_product_data(){ // 加载商品数据
 }
 
 bool Servor::load_user_data(){ // 加载用户数据
-    ifstream ifs("data_user.txt");
+    ifstream ifs("data/users.csv");
     if(!ifs){
-        cout << "ERROR: 'data_user.txt' not found" << endl;
+        cout << "ERROR: 'data/users.csv' not found" << endl;
         return false;
     }
     string line;
@@ -212,7 +219,7 @@ bool Servor::load_user_data(){ // 加载用户数据
         User user(User::USER);
 		Cart cart;
         Product product("NULL", "NULL", 0, 0);
-		while (getline(ss, temp,' ')){ // 逐个读取数据
+		while (getline(ss, temp,',')){ // 逐个读取数据
 			if (i == 0){ // 读取用户名称
 				user.set_name(temp);
 			} else if (i == 1){ // 读取用户密码
@@ -244,9 +251,9 @@ bool Servor::load_user_data(){ // 加载用户数据
 }
 
 bool Servor::lode_code_data(){ // 加载兑换码数据
-    ifstream ifs("data_codes.txt");
+    ifstream ifs("data/codes.csv");
     if(!ifs){
-        cout << "ERROR: 'data_codes.txt' not found" << endl;
+        cout << "ERROR: 'data/codes.csv' not found" << endl;
         return false;
     }
     string line;
@@ -257,7 +264,7 @@ bool Servor::lode_code_data(){ // 加载兑换码数据
         string code_string;
         double discount;
         bool pubilsh_flag;
-        while (getline(ss, temp,' ')){ // 逐个读取数据
+        while (getline(ss, temp,',')){ // 逐个读取数据
             if (i == 0){ // 读取兑换码
                 code_string = temp;
             } else if (i == 1){ // 读取折扣
@@ -276,16 +283,16 @@ bool Servor::lode_code_data(){ // 加载兑换码数据
 }
 
 bool Servor::save_product_data(){ // 保存商品数据
-    ofstream ofs("data_products.txt");
+    ofstream ofs("data/products.csv");
     for(auto product : products){
-        ofs << product.get_name() << " " << product.get_type() << " " << product.get_price() << " " << product.get_num() << endl;
+        ofs << product.get_name() << "," << product.get_type() << "," << product.get_price() << "," << product.get_num() << endl;
     }
     ofs.close();
     return true;
 }
 
 bool Servor::save_user_data(){ // 保存用户数据
-    ofstream ofs("data_user.txt");
+    ofstream ofs("data/users.csv");
     if(is_user()){ // 判断是否为登录中的用户, 是则保存到服务器
         for(auto &user : users){
             if(user.get_name() == current_user->get_name()){
@@ -295,12 +302,12 @@ bool Servor::save_user_data(){ // 保存用户数据
         }
     }
     for(auto user : users){ // 保存所有用户数据
-        ofs << user.get_name() << " " << user.get_password() << " " << user.get_money() << " ";
+        ofs << user.get_name() << "," << user.get_password() << "," << user.get_money() << ",";
         Cart cart = user.get_cart();
-        ofs << cart.get_coupon() << " " << cart.get_code_flag() << " ";
+        ofs << cart.get_coupon() << "," << cart.get_code_flag() << ",";
         vector<Product> user_products = cart.get_products();
         for(auto user_product : user_products){
-            ofs << user_product.get_name() << " " << user_product.get_num() << " ";
+            ofs << user_product.get_name() << "," << user_product.get_num() << ",";
         }
         ofs << endl;
     }
@@ -309,9 +316,9 @@ bool Servor::save_user_data(){ // 保存用户数据
 }
 
 bool Servor::save_code_data(){ // 保存兑换码数据
-    ofstream ofs("data_codes.txt");
+    ofstream ofs("data/codes.csv");
     for(auto code : codes){
-        ofs << code.get_code() << " " << code.get_discount() << " " << code.get_pubilsh_flag() << endl;
+        ofs << code.get_code() << "," << code.get_discount() << "," << code.get_pubilsh_flag() << endl;
     }
     ofs.close();
     return true;
@@ -714,7 +721,10 @@ bool Servor::cart_payment(vector<int> index, double total_price){ // 支付
 }
 
 bool Servor::cart_save_history(vector<int> index, Cart original_cart, double total_price){ // 保存历史
-    ofstream ofs("history_" + current_user->get_name() + ".txt", ios::app);
+    if (access("history", 0) != 0){ // 判断历史文件夹是否存在
+        mkdir("history");
+    }
+    ofstream ofs("history/" + current_user->get_name() + ".txt", ios::app);
     long long seconds;
     // int yy, mm, dd;
     int h, m, s;
@@ -744,7 +754,7 @@ bool Servor::cart_save_history(vector<int> index, Cart original_cart, double tot
 }
 
 bool Servor::cart_show_history(){ // 显示历史
-    ifstream ifs("history_" + current_user->get_name() + ".txt");
+    ifstream ifs("history/" + current_user->get_name() + ".txt");
     if(!ifs){ // 判断历史是否存在
         cout << "ERROR: history not found" << endl;
         return false;
@@ -779,7 +789,7 @@ bool Servor::cart_analysis(vector<int> start_time, vector<int> end_time){ // 通
 }
 
 bool Servor::cart_analysis(long long seconds_begin, long long seconds_end){ // 通过时间戳分析历史
-    ifstream ifs("history_" + current_user->get_name() + ".txt");
+    ifstream ifs("history/" + current_user->get_name() + ".txt");
     if(!ifs){ // 判断历史是否存在
         cout << "ERROR: history not found" << endl;
         return false;
