@@ -23,8 +23,7 @@ bool isFloat(const std::string& str) {
     }
 }
 
-int main(){
-    cout << "数据库表<批量插入数据>代码生成器 (竖式填入)" << endl << endl;
+void generator(){
     cout << "请输入表的名字: ";
     string table_name;
     cin >> table_name;
@@ -75,5 +74,17 @@ int main(){
         cout << endl;
     }
     cout << endl;
-    // system("pause");
+}
+
+int main(){
+    cout << "数据库表<批量插入数据>代码生成器 (竖式填入)" << endl << endl;
+    while(1){
+        generator();
+        cout << "是否继续生成代码? (y/n): ";
+        string temp;
+        cin >> temp;
+        if(temp == "n" || temp == "N"){
+            break;
+        }
+    }
 }
