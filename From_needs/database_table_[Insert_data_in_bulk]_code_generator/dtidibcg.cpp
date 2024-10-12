@@ -77,8 +77,8 @@ void generator(){
 }
 
 int main(){
-    cout << "数据库表<批量插入数据>代码生成器 (竖式填入)" << endl << endl;
     while(1){
+        cout << "数据库表<批量插入数据>代码生成器 (竖式填入)" << endl << endl;
         generator();
         cout << "是否继续生成代码? (y/n): ";
         string temp;
@@ -86,5 +86,6 @@ int main(){
         if(temp == "n" || temp == "N"){
             break;
         }
+        system("cls");
     }
 }
